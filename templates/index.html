@@ -1,0 +1,135 @@
+<!doctype html>
+<html>
+
+<head>
+    <title>Komodo</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/pure-min.css">
+    <link rel="stylesheet" href="http://yui.yahooapis.com/pure/0.6.0/grids-responsive-min.css">
+    <script src="https://code.jquery.com/jquery-1.12.2.min.js" integrity="sha256-lZFHibXzMHo3GGeehn1hudTAP3Sc0uKXBXAzHX1sjtk=" crossorigin="anonymous"></script>
+    <link href='http://fonts.googleapis.com/css?family=Lato&subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+
+    <style>
+        body {
+            font-family: Lato, sans-serif;
+        }
+        div {
+            position: relative;
+        }
+        img {
+            margin: 0 auto;
+        }
+        input {
+            width: 180px;
+        }
+        input[name=page] {
+            display: inline-block;
+            width: 50%;
+        }
+        .center {
+            text-align: center;
+        }
+        .display-book {
+            background-color: #eee;
+            width: 400px;
+            height: 250px;
+        }
+        .book-cover {
+            float: left;
+            width: 30%;
+            height: 100%;
+            background-color: #000;
+        }
+        .progress-details {
+            float: left;
+            width: 70%;
+            height: 100%;
+        }
+        .progress-bar {
+            width: 100%;
+            height: 3px;
+            margin: 50px 0;
+            background-color: #f00;
+        }
+        .progress-bar-bar {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            background-color: #0f0;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div id class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-6"></div>
+        <div class="pure-u-1 pure-u-lg-2-3 center">
+            <h1>Komodo</h1>
+            <h3>An IRL achievement system for reading books</h3>
+            <img class="pure-img" src="https://unsplash.it/400/500?random" />
+            <form class="pure-form add">
+                <fieldset>
+                    <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                        <label for=title>Title </label>
+                        <input type=text name=title id=title placeholder="The Catcher in the Rye" />
+                    </div>
+                        <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                        <label for=author>Author </label>
+                        <input type=text name=author id=author placeholder="J.D. Salinger" />
+                    </div>
+                        <div class="pure-u-1 pure-u-lg-1-3">
+                        <a class="pure-button" href="#my">Start Reading Today!</a>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+    </div>
+
+    <div id="my" class="pure-g">
+        <div class="pure-u-1 pure-u-lg-1-6"></div>
+        <div class="pure-u-1 pure-u-lg-2-3 center">
+            <h2>My Books</h2>
+            <div class="display-book">
+                <div class="book-cover"></div>
+                <div class="progress-details">
+                    <div class="progress-bar">
+                        <div class="progress-bar-bar" style="width:50%"></div>
+                    </div>
+                    <div class="book-details">
+                        <p>{{title}} by {{author}}</p>
+                        <form class="pure-form">
+                            <fieldset>
+                                Page <input type=number name=page />
+                                <a class="pure-button">I read more today!</a>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="pure-u-1 pure-u-lg-1-5"></div>
+        <div class="pure-u-1 pure-u-lg-3-5 center">
+            <form class="pure-form add">
+                    <div class="pure-u-1 pure-u-md-2-5">
+                        <label for=title>Title </label>
+                        <input type=text name=title id=title placeholder="The Catcher in the Rye" />
+                    </div>
+                    <div class="pure-u-1 pure-u-md-2-5">
+                        <label for=author>Author </label>
+                        <input type=text name=author id=author placeholder="J.D. Salinger" />
+                    </div>
+                    <div class="pure-u-1 pure-u-md-1-6">
+                        <a class="pure-button" href="#my">Add Book</a>
+                    </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        vph = $(window).height();
+        $('.pure-g').height(vph);
+    </script>
+
+</body>
+</html>
