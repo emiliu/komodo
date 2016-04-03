@@ -1,4 +1,6 @@
 from flask import Flask, session, render_template, redirect, url_for, request
+from twilio.rest import TwilioRestClient
+import time
 import json, requests
 
 account_sid = "ACe1b841114bb532eab845e83995f2ab3c"
@@ -8,6 +10,14 @@ client = TwilioRestClient(account_sid, auth_token)
 
 app = Flask(__name__)
 app.secret_key = 'asdf'
+
+messagesf = client.messages.list()
+
+gbookName = ""
+gpgsRead = ""
+
+for i in messagesf:
+    client.messages.delete_instance(i.sid)
 
 @app.route('/')
 def index():
@@ -62,7 +72,7 @@ def send_sms(progCount):
         for friend in session['friends']:
             friendMessage = "Your friend " + session['name'] + " has finished a book!"
             client.messages.create(to="+1" + contactNumber, from_="+12015089231", body=friendMessage)
-            
+
     client.messages.create(to="+1" + contactNumber, from_="+12015089231", body=userMessage)
     return
 
@@ -90,6 +100,21 @@ def get_progress():
 @app.route('/delete')
 def delete():
     return
+
+while True:
+    messages = client.messages.list()
+
+    for i in messages:
+        if i.from_ == "+1" + session['name']:
+            body = i.body
+            bookName = body.rsplit(' ', 1)[0]
+            pgsRead = int(body.rsplit(' ', 1)[1])
+            gbookName = bookName
+            gpgsRead = pgsRead
+            update_progress()
+
+        client.messages.delete_instance(i.sid)
+    time.sleep(5)
 
 if __name__ == '__main__':
     app.run(debug=True)
