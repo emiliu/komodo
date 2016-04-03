@@ -46,7 +46,7 @@ def add_book():
     book = r['docs'][0]
     session['books'].push({book['title_suggest']:{'author':book['author_name'][0],
         'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][0],
-        'pages':int(request.form['pages']),'read':0}})
+        'pages':int(request.form['pages']),'read':0,'progress':0}})
     return redirect(url_for('home'))
 
 @app.route('/friends', methods=['POST'])
