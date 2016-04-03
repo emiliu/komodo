@@ -4,6 +4,7 @@ from twilio.rest import TwilioRestClient
 from time import sleep
 import json, requests
 from threading import Timer
+from returnRandomQuote import returnRandomQuote
 
 account_sid = "ACe1b841114bb532eab845e83995f2ab3c"
 auth_token = "29851e1d4546574268457ff09472f807"
@@ -36,15 +37,18 @@ def home():
 
 @app.route('/sms', methods=['POST']) 
 def sms():
+    print 'sms'
     body = request.form['Body']
-    name = request.form['from_']
-    """ do something wihth bodybupdate wesite 
-    if (len(body) == 1):
-        a = 1
-    elif ():"""
+    print body
+    name = request.form['From']
+    print name
+    #do something wihth bodybupdate wesite 
+    if body == 'Y' and name in session['friends']:
+        print 'friend'
+        client.messages.create(to="+1" + session['number'], from_="+12015089231", body=returnRandomQuote())
 
     resp = twiml.Response()
-    resp.message(name)
+    resp.message('A funny or inspirational quote has been sent to your friend!')
     return str(resp)
 
 @app.route('/personal', methods=['POST'])
@@ -86,7 +90,7 @@ def send_sms(progCount):
         elif progCount == 2:
             userMessage = "Wow! You're halfway through the book!"
         elif progCount == 3:
-            userMessage = "hi"
+            userMessage = "You're 75% of the way through - almost there!"
         elif progCount == 4:
             userMessage = "Congratulations on finishing the book! Keep up the good work!"
             for friend in session['friends']:

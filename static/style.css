@@ -25,6 +25,9 @@ h1 {
 .pure-u-1 {
     margin-top: 20px;
 }
+.pure-button {
+    background-color: #b2e672;
+}
 .logo {
     width: 500px;
 }
@@ -51,5 +54,5 @@ h1 {
     top: 0;
     left: 0;
     height: 100%;
-    background-color: #3f3;
+    background-color: #b2e672;
 }
