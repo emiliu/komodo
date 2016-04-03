@@ -21,6 +21,27 @@ for i in messagesf:
 
 @app.route('/')
 def index():
+    messages = client.messages.list()
+
+    for i in messages:
+        if len(i.body) == 1:
+            a = 1
+        elif i.from_ == "+1" + session['name']:
+            body = i.body
+            bookName = body.rsplit(' ', 1)[0]
+            pgsRead = int(body.rsplit(' ', 1)[1])
+            okay = 0
+            for key in session['books']:
+                if key == bookName:
+                    okay = 1
+                    gbookName = bookName
+                    gpgsRead = pgsRead
+                    update_progress()
+                    break
+            if okay == 0:
+                client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Sorry your book was not found. Please make sure you entered the title properly.")
+            
+        client.messages.delete_instance(i.sid)
     if session['books']:
         return redirect(url_for('home'))
     session['books'] = {}
@@ -47,6 +68,7 @@ def add_book():
     session['books'][request.form['title']]={'author':request.form['author'],
         'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][-1],
         'pages':int(request.form['pages']),'read':0,'progress':0}
+    client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Good job on starting " + request.form['title'] + "!")
     return redirect(url_for('home'))
 
 @app.route('/friends', methods=['POST'])
@@ -60,7 +82,7 @@ def send_sms(progCount):
     contactNumber = session['number']
     userMessage = ""
     if progCount == 0:
-        userMessage = "Good job! "
+        userMessage = "Good job!"
     elif progCount == 1:
         userMessage = "You're 25% of the way there!"
     elif progCount == 2:
@@ -91,8 +113,6 @@ def update_progress():
         send_sms(2)
     elif book['read'] == book['pages'] * 0.25 and lastpages < book['pages'] * 0.25:
         send_sms(1)
-    elif book['read'] == 0:
-        send_sms(0)
     return redirect(url_for('home'))
 
 @app.route('/progress')
@@ -110,23 +130,7 @@ def reset_session():
 @app.route('/delete')
 def delete():
     return
-
-'''
-while True:
-    messages = client.messages.list()
-
-    for i in messages:
-        if i.from_ == "+1" + session['name']:
-            body = i.body
-            bookName = body.rsplit(' ', 1)[0]
-            pgsRead = int(body.rsplit(' ', 1)[1])
-            gbookName = bookName
-            gpgsRead = pgsRead
-            update_progress()
-
-        client.messages.delete_instance(i.sid)
-    time.sleep(5)
-    '''
+    
 
 if __name__ == '__main__':
     app.run(debug=True)
