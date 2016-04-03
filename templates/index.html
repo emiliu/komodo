@@ -1,8 +1,7 @@
 {% extends "header.html" %}
 {% block body %}
 <div class="pure-g">
-    <div class="pure-u-1 pure-u-lg-1-6"></div>
-    <div class="pure-u-1 pure-u-lg-2-3 center">
+    <div class="pure-u-1 center">
         <h1>Komodo</h1>
         <h3>An IRL achievement system for reading books</h3>
         <img class="pure-img" src="{{ url_for('static', filename='komodologo.png') }}" />
@@ -13,6 +12,8 @@
                     <input type=text name=title id=title placeholder="The Catcher in the Rye" />
                     <label for=author>Author </label>
                     <input type=text name=author id=author placeholder="J.D. Salinger" />
+                    <label for=author>Pages </label>
+                    <input type=number name=pages id=author placeholder="214" />
                     <button type="submit" class="pure-button">Start Reading Today!</a>
                 </div>
             </fieldset>

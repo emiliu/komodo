@@ -19,7 +19,7 @@
 
     <div class="pure-u-1 center">
         {% for title, data in session.books.iteritems() %}
-        <div class="display-book">
+        <div class="display-book" title="Read {{data.read}}/{{data.pages}} pages">
             <div class="progress-bar">
                 <div class="progress-bar-bar" style="width:{{data.progress}}%"></div>
             </div>
