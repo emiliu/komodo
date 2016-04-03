@@ -45,7 +45,10 @@ gpgsRead = ""
 for i in messagesf:
     client.messages.delete_instance(i.sid)
 
-def check():
+rt = RepeatedTimer(5, index, "World")
+
+@app.route('/')
+def index():
     messages = client.messages.list()
 
     for i in messages:
@@ -67,11 +70,6 @@ def check():
                 client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Sorry your book was not found. Please make sure you entered the title properly.")
             
         client.messages.delete_instance(i.sid)
-
-rt = RepeatedTimer(5, hello, "World")
-
-@app.route('/')
-def index():
     if session['books']:
         return redirect(url_for('home'))
     session['books'] = {}
