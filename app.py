@@ -44,7 +44,7 @@ def add_book():
     r = json.loads(requests.get('http://openlibrary.org/search.json',
             params={'title':request.form['title'],'author':request.form['author']}))
     book = r['docs'][0]
-    session['books'].push({book['isbn'][0]:{'title':book['title_suggest'],'author':book['author_name'][0],
+    session['books'].push({book['title_suggest']:{'author':book['author_name'][0],
         'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][0],
         'pages':int(request.form['pages']),'read':0}})
     return redirect(url_for('home'))
@@ -78,7 +78,7 @@ def send_sms(progCount):
 
 @app.route('/update', methods=['POST'])
 def update_progress():
-    book = session['books'][request.form['isbn']]
+    book = session['books'][request.form['title']]
     lastpages = book['read']
     book['read'] = int(request.form['read'])
     if book['read'] >= book['pages']:
