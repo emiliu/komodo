@@ -7,11 +7,11 @@
         <form class="pure-form add" action="{{url_for('add_book')}}" method=post>
             <div class="pure-u-1">
                 <label for=title>Title </label>
-                <input type=text name=title id=title placeholder="The Catcher in the Rye" />
+                <input type=text name=title id=title placeholder="The Catcher in the Rye" />&nbsp;&nbsp;&nbsp;
                 <label for=author>Author </label>
-                <input type=text name=author id=author placeholder="J.D. Salinger" />
+                <input type=text name=author id=author placeholder="J.D. Salinger" />&nbsp;&nbsp;&nbsp;
                 <label for=author>Pages </label>
-                <input type=number name=pages id=author placeholder="214" />
+                <input type=number name=pages id=author placeholder="214" />&nbsp;&nbsp;
                 <button type=submit class="pure-button">Add Book</button>
             </div>
         </form>
@@ -37,21 +37,23 @@
         {% endfor %}
     </div>
 
+    {% if session.books|length > 3 %}
 
     <div class="pure-u-1 center">
         <form class="pure-form add" action="{{url_for('add_book')}}" method=post>
             <div class="pure-u-1">
                 <label for=title>Title </label>
-                <input type=text name=title id=title placeholder="The Catcher in the Rye" />
+                <input type=text name=title id=title placeholder="The Catcher in the Rye" />&nbsp;&nbsp;&nbsp;
                 <label for=author>Author </label>
-                <input type=text name=author id=author placeholder="J.D. Salinger" />
+                <input type=text name=author id=author placeholder="J.D. Salinger" />&nbsp;&nbsp;&nbsp;
                 <label for=author>Pages </label>
-                <input type=number name=pages id=author placeholder="214" />
+                <input type=number name=pages id=author placeholder="214" />&nbsp;&nbsp;
                 <button type=submit class="pure-button">Add Book</button>
             </div>
         </form>
     </div>
 
+    {% endif %}
 
     <div class="display-settings">
         <div class="pure-u-1 center"><h2>Settings</h2></div>
@@ -66,7 +68,7 @@
 
         <div class="pure-u-1 center">
             <form class="pure-form" action="{{url_for('personal_info')}}" method=post>
-                Name: <input name=name />
+                Name: <input name=name />&nbsp;&nbsp;
                 Number: <input name=number />
                 <button type=submit value=submit class="pure-button">Update Personal Info</button>
             </form>

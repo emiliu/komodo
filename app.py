@@ -17,7 +17,7 @@ app.secret_key = 'asdf'
 messagesf = client.messages.list()
 
 gbookName = ""
-gpgsRead = ""
+upgsRead = ""
 
 for i in messagesf:
     client.messages.delete_instance(i.sid)
@@ -43,12 +43,12 @@ def sms():
     name = request.form['From']
     print name
     #do something wihth bodybupdate wesite 
-    if body == 'Y' and name in session['friends']:
+    if body == 'Y': # and name[2:] in session['friends']:
         print 'friend'
-        client.messages.create(to="+1" + session['number'], from_="+12015089231", body=returnRandomQuote())
+        client.messages.create(to="+18482166055", from_="+12015089231", body=returnRandomQuote())
 
     resp = twiml.Response()
-    resp.message('A funny or inspirational quote has been sent to your friend!')
+    resp.message('A random quote has been sent to your friend!')
     return str(resp)
 
 @app.route('/personal', methods=['POST'])
