@@ -21,46 +21,13 @@ gpgsRead = ""
 
 for i in messagesf:
     client.messages.delete_instance(i.sid)
-"""
+
 @app.route('/')
 def index():
-    if session['books']:
-        return redirect(url_for('home'))
-    session['books'] = {}
-    session['friends'] = []
+    if not session['books']:
+        session['books'] = {}
+        session['friends'] = []
     return render_template('index.html')
-    
-    messages = client.messages.list()
-
-    for i in messages:
-        if len(i.body) == 1:
-            a = 1
-        elif i.from_ == "+1" + session['name']:
-            body = i.body
-            bookName = body.rsplit(' ', 1)[0]
-            pgsRead = int(body.rsplit(' ', 1)[1])
-            okay = 0
-            for key in session['books']:
-                if key == bookName:
-                    okay = 1
-                    gbookName = bookName
-                    gpgsRead = pgsRead
-                    update_progress()
-                    break
-            if okay == 0:
-                client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Sorry your book was not found. Please make sure you entered the title properly.")
-            
-        client.messages.delete_instance(i.sid)"""
-    
-
-#rt = RepeatedTimer(5, index, "World")
-def returnRandomQuote():
-    f = open('quotes.csv', 'r')
-    quotes = []
-    for line in f:
-        quotes.append(line)
-    output = random.choice(quotes).strip('\n')
-    return output
 
 @app.route('/home')
 def home():
@@ -89,13 +56,17 @@ def personal_info():
 
 @app.route('/add', methods=['POST'])
 def add_book():
-    r = json.loads(requests.get('http://openlibrary.org/search.json',
-            data={'title':request.form['title'],'author':request.form['author']}).text)
-    book = r['docs'][0]
-    session['books'][request.form['title']]={'author':request.form['author'],
-        'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][-1],
-        'pages':int(request.form['pages']),'read':0,'progress':0}
-    client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Good job on starting " + request.form['title'] + "!")
+    if request.form['title']:
+        #r = json.loads(requests.get('http://openlibrary.org/search.json',
+                #data={'title':request.form['title'],'author':request.form['author']}).text)
+        #book = r['docs'][0]
+        session['books'][request.form['title']]={'author':request.form['author'],
+            #'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][-1],
+            'pages':int(request.form['pages']),'read':0,'progress':0}
+        try:
+            client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Good job on starting " + request.form['title'] + "!")
+        except:
+            print 'error'
     return redirect(url_for('home'))
 
 @app.route('/friends', methods=['POST'])
@@ -106,24 +77,26 @@ def friends():
     return redirect(url_for('home'))
 
 def send_sms(progCount):
-    contactNumber = session['number']
-    userMessage = ""
-    if progCount == 0:
-        userMessage = "Good job!"
-    elif progCount == 1:
-        userMessage = "You're 25% of the way there!"
-    elif progCount == 2:
-        userMessage = "Wow! You're halfway through the book!"
-    elif progCount == 3:
-        userMessage = "hi"
-    elif progCount == 4:
-        userMessage = "Congratulations on finishing the book! Keep up the good work!"
-        for friend in session['friends']:
-            friendMessage = "Your friend " + session['name'] + " has finished a book!"
-            client.messages.create(to="+1" + friend, from_="+12015089231", body=friendMessage)
+    try:
+        contactNumber = session['number']
+        userMessage = ""
+        if progCount == 0:
+            userMessage = "Good job!"
+        elif progCount == 1:
+            userMessage = "You're 25% of the way there!"
+        elif progCount == 2:
+            userMessage = "Wow! You're halfway through the book!"
+        elif progCount == 3:
+            userMessage = "hi"
+        elif progCount == 4:
+            userMessage = "Congratulations on finishing the book! Keep up the good work!"
+            for friend in session['friends']:
+                friendMessage = "Your friend " + session['name'] + " has finished a book!"
+                client.messages.create(to="+1" + friend, from_="+12015089231", body=friendMessage)
 
-    client.messages.create(to="+1" + contactNumber, from_="+12015089231", body=userMessage)
-    return
+        client.messages.create(to="+1" + contactNumber, from_="+12015089231", body=userMessage)
+    except:
+        print 'error'
 
 @app.route('/update', methods=['POST'])
 def update_progress():
@@ -152,7 +125,7 @@ def reset_session():
     session['friends'] = []
     session['name'] = ''
     session['number'] = ''
-    return redirect(url_for('home'))
+    return redirect(url_for('index'))
 
 @app.route('/delete')
 def delete():

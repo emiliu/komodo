@@ -1,60 +1,75 @@
 {% extends "header.html" %}
 {% block body %}
 <div class="pure-g">
-    <div class="pure-u-1 pure-u-lg-1-6"></div>
-    <div class="pure-u-1 pure-u-lg-2-3 center">
+
+    <div class="pure-u-1 center">
         <h2>My Books</h2>
-        {% for title, data in session.books.iteritems() %}
-            <div class="display-book">
-                <div class="book-cover"><img src="{{data.cover}}"/></div>
-                <div class="progress-details">
-                    <div class="progress-bar">
-                        <div class="progress-bar-bar" style="width:{{data.progress}}%"></div>
-                    </div>
-                    <div class="book-details">
-                        <p>{{title}} by {{data.author}}</p>
-                        <form class="pure-form" action="{{url_for('update_progress')}}" method=post>
-                            <fieldset>
-                                <input type=hidden name=title value="{{title}}" />
-                                Page <input type=number name=read />
-                                <button type=submit class="pure-button">I read more today!</a>
-                            </fieldset>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        {% endfor %}
-    </div>
-    <div class="pure-u-1 pure-u-lg-1-5"></div>
-    <div class="pure-u-1 pure-u-lg-3-5 center">
         <form class="pure-form add" action="{{url_for('add_book')}}" method=post>
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <label for=title>Title </label>
-                    <input type=text name=title id=title placeholder="The Catcher in the Rye" />
-                </div>
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <label for=author>Author </label>
-                    <input type=text name=author id=author placeholder="J.D. Salinger" />
-                </div>
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <label for=author>Pages </label>
-                    <input type=number name=pages id=author placeholder="100" />
-                </div>
-                <div class="pure-u-1 pure-u-md-1-4">
-                    <button type=submit class="pure-button">Add Book</button>
-                </div>
+            <div class="pure-u-1">
+                <label for=title>Title </label>
+                <input type=text name=title id=title placeholder="The Catcher in the Rye" />
+                <label for=author>Author </label>
+                <input type=text name=author id=author placeholder="J.D. Salinger" />
+                <label for=author>Pages </label>
+                <input type=number name=pages id=author placeholder="214" />
+                <button type=submit class="pure-button">Add Book</button>
+            </div>
         </form>
     </div>
 
-    <form class="pure-form" action="{{url_for('friends')}}" method=post>
-        <input type=text name=friends />
-        <button type=submit value=submit>Update Friends</button>
-    </form>
+    <div class="pure-u-1 center">
+        {% for title, data in session.books.iteritems() %}
+        <div class="display-book" title="Read {{data.read}}/{{data.pages}} pages">
+            <div class="progress-bar">
+                <div class="progress-bar-bar" style="width:{{data.progress}}%"></div>
+            </div>
+            <div class="book-details">
+                <h4>{{title}} by {{data.author}}</h4>
+                <form class="pure-form" action="{{url_for('update_progress')}}" method=post>
+                    <fieldset>
+                        <input type=hidden name=title value="{{title}}" />
+                        I read up to page <input type=number name=read /> today!
+                        <button type=submit class="pure-button">Update Progress</a>
+                    </fieldset>
+                </form>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
 
-    <form class="pure-form" action="{{url_for('personal_info')}}" method=post>
-        Name: <input name=name />
-        Number: <input name=number />
-        <button type=submit value=submit>Update Personal Info</button>
-    </form>
+    <div class="pure-u-1 center">
+        <form class="pure-form add" action="{{url_for('add_book')}}" method=post>
+            <div class="pure-u-1">
+                <label for=title>Title </label>
+                <input type=text name=title id=title placeholder="The Catcher in the Rye" />
+                <label for=author>Author </label>
+                <input type=text name=author id=author placeholder="J.D. Salinger" />
+                <label for=author>Pages </label>
+                <input type=number name=pages id=author placeholder="214" />
+                <button type=submit class="pure-button">Add Book</button>
+            </div>
+        </form>
+    </div>
+
+    <div class="display-settings">
+        <div class="pure-u-1 center"><h2>Settings</h2></div>
+
+        <div class="pure-u-1 center">
+            <form class="pure-form" action="{{url_for('friends')}}" method=post>
+                <label for=friends>Friends' Phone Numbers, comma-separated </label>
+                <input type=text name=friends />
+                <button type=submit value=submit class="pure-button">Update Friends</button>
+            </form>
+        </div>
+
+        <div class="pure-u-1 center">
+            <form class="pure-form" action="{{url_for('personal_info')}}" method=post>
+                Name: <input name=name />
+                Number: <input name=number />
+                <button type=submit value=submit class="pure-button">Update Personal Info</button>
+            </form>
+        </div>
+
+    </div>
 </div>
 {% endblock %}
