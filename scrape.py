@@ -9,7 +9,7 @@ html = response.content
 
 soup = BeautifulSoup(html)
 table = soup.find('div', attrs={'class': 'article-body inc_editable'})
-print table.prettify
+#print table.prettify
 #table = soup.find('li', attrs={'style': 'font-style:inherit'})
 #print table#.prettify
 
