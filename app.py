@@ -1,69 +1,58 @@
-import flask
-import flask.ext.login as flask_login
+from flask import Flask, session, render_template, redirect, url_for, request
+import json, requests
 
-app = flask.Flask(__name__)
+app = Flask(__name__)
 app.secret_key = 'asdf'
 
-login_manager = flask_login.LoginManager()
-login_manager.init_app(app)
-users = {}
+@app.route('/')
+def index():
+    if session['books']:
+        return redirect(url_for('home'))
+    session['books'] = []
+    session['friends'] = []
+    return render_template('index.html')
 
-class User(flask_login.UserMixin):
-    pass
+@app.route('/home')
+def home():
+    if not session['books']:
+        session['books']= []
+    return render_template('home.html', books=session['books'], friends=session['friends'])
 
-@login_manager.user_loader
-def user_loader(email):
-    if email not in users:
-        return
-    
-    user = User()
-    user.id = email
-    return user
+@app.route('/add', methods=['POST'])
+def add_book():
+    r = json.loads(requests.get('http://openlibrary.org/search.json',
+            params={'title':request.form['title'],'author':request.form['author']}))
+    book = r['docs'][0]
+    session['books'].push({book['isbn'][0]:{'title':book['title_suggest'],'author':book['author_name'][0],
+        'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][0],
+        'pages':int(request.form['pages']),'read':0}})
+    return redirect(url_for('home'))
 
-@login_manager.request_loader
-def request_loader(request):
-    email = request.form.get('email')
-    if email not in users:
-        return
+@app.route('/friends', methods=['POST'])
+def friends():
+    if request.form:
+        session['friends'] = request.form['friends'].split(',')
+        #return redirect(url_for('home'))
+    return session['friends']
 
-    user = User()
-    user.id = email
+def send_sms():
+    return
 
+@app.route('/update', methods=['POST'])
+def update_progress():
+    book = session['books'][request.form['isbn']]
+    book['read'] = int(request.form['read'])
+    if book['read'] >= book['pages']:
+        send_sms()
+    #return redirect(url_for('home'))
 
-@app.route('/login', methods=['GET', 'POST'])
-def login():
-    if flask.request.method == 'GET':
-        return '''
-               <form action='login' method='POST'>
-                <input type='text' name='email' id='email' placeholder='email' />
-                <input type='password' name='pw' id='pw' placeholder='password' />
-                <input type='submit' name='submit'></input>
-               </form>
-               '''
+@app.route('/progress')
+def get_progress():
+    return str(session['books'])
 
-    email = flask.request.form['email']
-    if flask.request.form['pw'] == users[email]['pw']:
-        user = User()
-        user.id = email
-        flask_login.login_user(user)
-        return flask.redirect(flask.url_for('protected'))
-
-    return 'Bad login'
-
-@app.route('/protected')
-@flask_login.login_required
-def protected():
-    return 'Logged in as: ' + flask_login.current_user.id
-
-@app.route('/logout')
-def logout():
-    flask_login.logout_user()
-    return 'Logged out'
-
-@login_manager.unauthorized_handler
-def unauthorized_handler():
-    return 'Unauthorized'
-
+@app.route('/delete')
+def delete():
+    return
 
 if __name__ == '__main__':
     app.run(debug=True)
