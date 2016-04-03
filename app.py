@@ -4,6 +4,7 @@ from twilio.rest import TwilioRestClient
 from time import sleep
 import json, requests
 from threading import Timer
+import random
 
 account_sid = "ACe1b841114bb532eab845e83995f2ab3c"
 auth_token = "29851e1d4546574268457ff09472f807"
@@ -53,6 +54,13 @@ def index():
     
 
 #rt = RepeatedTimer(5, index, "World")
+def returnRandomQuote():
+    f = open('quotes.csv', 'r')
+    quotes = []
+    for line in f:
+        quotes.append(line)
+    output = random.choice(quotes).strip('\n')
+    return output
 
 @app.route('/home')
 def home():
@@ -63,14 +71,14 @@ def home():
 @app.route('/sms', methods=['POST']) 
 def sms():
     body = request.form['Body']
-    name = request.form['from_']
-    """ do something wihth bodybupdate wesite 
-    if (len(body) == 1):
-        a = 1
-    elif ():"""
+    guy = request.form['From']
+    """ do something wihth body update wesite """
+    if (body == "Y"):
+        if (guy in session['friends']):
+            client.messages.create(to="+1" + session['number'], from_="+12015089231", body=returnRandomQuote())
 
     resp = twiml.Response()
-    resp.message(name)
+    resp.message(guy)
     return str(resp)
 
 @app.route('/personal', methods=['POST'])
