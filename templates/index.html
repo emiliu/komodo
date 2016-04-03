@@ -5,18 +5,14 @@
     <div class="pure-u-1 pure-u-lg-2-3 center">
         <h1>Komodo</h1>
         <h3>An IRL achievement system for reading books</h3>
-        <img class="pure-img" src="https://unsplash.it/400/500?random" />
+        <img class="pure-img" src="{{ url_for('static', filename='komodologo.png') }}" />
         <form class="pure-form add" action="{{ url_for('add_book') }}" method=post>
             <fieldset>
-                <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
+                <div class="pure-u-1 cta">
                     <label for=title>Title </label>
                     <input type=text name=title id=title placeholder="The Catcher in the Rye" />
-                </div>
-                    <div class="pure-u-1 pure-u-md-1-2 pure-u-lg-1-3">
                     <label for=author>Author </label>
                     <input type=text name=author id=author placeholder="J.D. Salinger" />
-                </div>
-                    <div class="pure-u-1 pure-u-lg-1-3">
                     <button type="submit" class="pure-button">Start Reading Today!</a>
                 </div>
             </fieldset>

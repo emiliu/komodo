@@ -45,7 +45,7 @@ gpgsRead = ""
 for i in messagesf:
     client.messages.delete_instance(i.sid)
 
-rt = RepeatedTimer(5, index, "World")
+#rt = RepeatedTimer(5, index, "World")
 
 @app.route('/')
 def index():
@@ -70,10 +70,9 @@ def index():
                 client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Sorry your book was not found. Please make sure you entered the title properly.")
             
         client.messages.delete_instance(i.sid)
-    if session['books']:
-        return redirect(url_for('home'))
-    session['books'] = {}
-    session['friends'] = []
+    if not session['books']:
+        session['books'] = {}
+        session['friends'] = []
     return render_template('index.html')
 
 @app.route('/home')
@@ -90,13 +89,14 @@ def personal_info():
 
 @app.route('/add', methods=['POST'])
 def add_book():
-    r = json.loads(requests.get('http://openlibrary.org/search.json',
-            data={'title':request.form['title'],'author':request.form['author']}).text)
-    book = r['docs'][0]
-    session['books'][request.form['title']]={'author':request.form['author'],
-        'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][-1],
-        'pages':int(request.form['pages']),'read':0,'progress':0}
-    client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Good job on starting " + request.form['title'] + "!")
+    if request.form['title']:
+        #r = json.loads(requests.get('http://openlibrary.org/search.json',
+                #data={'title':request.form['title'],'author':request.form['author']}).text)
+        #book = r['docs'][0]
+        session['books'][request.form['title']]={'author':request.form['author'],
+            #'cover':'http://covers.openlibrary.org/b/isbn/%s-M.jpg'%book['isbn'][-1],
+            'pages':int(request.form['pages']),'read':0,'progress':0}
+        client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Good job on starting " + request.form['title'] + "!")
     return redirect(url_for('home'))
 
 @app.route('/friends', methods=['POST'])
