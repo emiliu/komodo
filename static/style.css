@@ -1,6 +1,3 @@
-body {
-    font-family: Lato, sans-serif;
-}
 div {
     position: relative;
 }
@@ -9,6 +6,9 @@ img {
 }
 input {
     width: 180px;
+}
+h1 {
+    font-size: 4em;
 }
 .add {
     margin-bottom: 20px;
@@ -19,8 +19,14 @@ input {
 .cta {
     margin-top: 20px;
 }
+.pure-g [class *="pure-u"] {
+    font-family: 'PT Sans', 'PT+Sans', sans-serif !important
+}
 .pure-u-1 {
     margin-top: 20px;
+}
+.logo {
+    width: 500px;
 }
 .display-book, .display-settings {
     height: 200px;
