@@ -1,33 +1,9 @@
 from flask import Flask, session, render_template, redirect, url_for, request
+from twilio import twiml
 from twilio.rest import TwilioRestClient
 from time import sleep
 import json, requests
 from threading import Timer
-
-class RepeatedTimer(object):
-    def __init__(self, interval, function, *args, **kwargs):
-        self._timer     = None
-        self.interval   = interval
-        self.function   = function
-        self.args       = args
-        self.kwargs     = kwargs
-        self.is_running = False
-        self.start()
-
-    def _run(self):
-        self.is_running = False
-        self.start()
-        self.function(*self.args, **self.kwargs)
-
-    def start(self):
-        if not self.is_running:
-            self._timer = Timer(self.interval, self._run)
-            self._timer.start()
-            self.is_running = True
-
-    def stop(self):
-        self._timer.cancel()
-        self.is_running = False
 
 account_sid = "ACe1b841114bb532eab845e83995f2ab3c"
 auth_token = "29851e1d4546574268457ff09472f807"
@@ -44,11 +20,15 @@ gpgsRead = ""
 
 for i in messagesf:
     client.messages.delete_instance(i.sid)
-
-rt = RepeatedTimer(5, index, "World")
-
+"""
 @app.route('/')
 def index():
+    if session['books']:
+        return redirect(url_for('home'))
+    session['books'] = {}
+    session['friends'] = []
+    return render_template('index.html')
+    
     messages = client.messages.list()
 
     for i in messages:
@@ -69,18 +49,29 @@ def index():
             if okay == 0:
                 client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Sorry your book was not found. Please make sure you entered the title properly.")
             
-        client.messages.delete_instance(i.sid)
-    if session['books']:
-        return redirect(url_for('home'))
-    session['books'] = {}
-    session['friends'] = []
-    return render_template('index.html')
+        client.messages.delete_instance(i.sid)"""
+    
+
+#rt = RepeatedTimer(5, index, "World")
 
 @app.route('/home')
 def home():
     if not session['books']:
         session['books']= {}
     return render_template('home.html')
+
+@app.route('/sms', methods=['POST']) 
+def sms():
+    body = request.form['Body']
+    name = request.form['from_']
+    """ do something wihth bodybupdate wesite 
+    if (len(body) == 1):
+        a = 1
+    elif ():"""
+
+    resp = twiml.Response()
+    resp.message(name)
+    return str(resp)
 
 @app.route('/personal', methods=['POST'])
 def personal_info():
