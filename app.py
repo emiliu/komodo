@@ -1,7 +1,33 @@
 from flask import Flask, session, render_template, redirect, url_for, request
 from twilio.rest import TwilioRestClient
-import time
+from time import sleep
 import json, requests
+from threading import Timer
+
+class RepeatedTimer(object):
+    def __init__(self, interval, function, *args, **kwargs):
+        self._timer     = None
+        self.interval   = interval
+        self.function   = function
+        self.args       = args
+        self.kwargs     = kwargs
+        self.is_running = False
+        self.start()
+
+    def _run(self):
+        self.is_running = False
+        self.start()
+        self.function(*self.args, **self.kwargs)
+
+    def start(self):
+        if not self.is_running:
+            self._timer = Timer(self.interval, self._run)
+            self._timer.start()
+            self.is_running = True
+
+    def stop(self):
+        self._timer.cancel()
+        self.is_running = False
 
 account_sid = "ACe1b841114bb532eab845e83995f2ab3c"
 auth_token = "29851e1d4546574268457ff09472f807"
@@ -19,8 +45,7 @@ gpgsRead = ""
 for i in messagesf:
     client.messages.delete_instance(i.sid)
 
-@app.route('/')
-def index():
+def check():
     messages = client.messages.list()
 
     for i in messages:
@@ -42,6 +67,11 @@ def index():
                 client.messages.create(to="+1" + session['number'], from_="+12015089231", body="Sorry your book was not found. Please make sure you entered the title properly.")
             
         client.messages.delete_instance(i.sid)
+
+rt = RepeatedTimer(5, hello, "World")
+
+@app.route('/')
+def index():
     if session['books']:
         return redirect(url_for('home'))
     session['books'] = {}
