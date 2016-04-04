@@ -43,12 +43,12 @@ def sms():
     name = request.form['From']
     print name
     #do something wihth bodybupdate wesite 
-    if body == 'Y': # and name[2:] in session['friends']:
+    if body == 'Y' or body == 'y' or body == 'Yes' or body == 'YES' or body == 'yes': # and name[2:] in session['friends']:
         print 'friend'
         client.messages.create(to="+18482166055", from_="+12015089231", body=returnRandomQuote())
 
     resp = twiml.Response()
-    resp.message('A random quote has been sent to your friend!')
+    resp.message('A motivational quote has been sent to your friend!')
     return str(resp)
 
 @app.route('/personal', methods=['POST'])
@@ -94,7 +94,8 @@ def send_sms(progCount):
         elif progCount == 4:
             userMessage = "Congratulations on finishing the book! Keep up the good work!"
             for friend in session['friends']:
-                friendMessage = "Your friend " + session['name'] + " has finished a book!"
+                print friend
+                friendMessage = "Your friend " + session['name'] + " has finished a book! Would you like to send " + session['name'] + ' a motivational quote? (Y/N)'
                 client.messages.create(to="+1" + friend, from_="+12015089231", body=friendMessage)
 
         client.messages.create(to="+1" + contactNumber, from_="+12015089231", body=userMessage)
