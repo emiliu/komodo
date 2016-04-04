@@ -18,10 +18,14 @@ create a Twilio account and use your own credentials to try out this project.
 
 Clone the git repository and change the sending phone number and Twilio credentials in ``app.py``.
 Set up a webhook with [https://ngrok.com/](ngrok) by downloading and running:
+
 ```$ ./ngrok http 5000```
+
 Update your Twilio app with the ngrok public URL that forwards to ``localhost:5000``.
 
-To run the app, make sure you are in the top-level directory (``komodo``) and from the command line run:
+To run the app, make sure you are in the top-level directory (``komodo``). From the command line, run:
+
 ```$ python app.py```
 
-The website will be live at http://localhost:5000/. To clear your session, visit http://localhost:5000/reset.
+The website will be live at [http://localhost:5000/](http://localhost:5000).
+To clear your session, point your browser at [http://localhost:5000/reset](http://localhost:5000/reset).
